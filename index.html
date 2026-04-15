@@ -1,13 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSHub — JavaScript Interview Prep</title>
+  <meta name="description" content="Master JavaScript at Google/Apple level. Deep-dive topics on Variables, Scope, Functions, Patterns and a live Playground." />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
+  <!-- CodeMirror — VS Code-like syntax highlighting -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
 <body>
-    
+
+  <!-- ══ NAVBAR ══ -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+
+      <div class="nav-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">JS<span class="logo-accent">Hub</span></span>
+      </div>
+
+      <div class="nav-links">
+        <a href="#" class="nav-link active" data-view="home"       id="nav-home">Home</a>
+        <a href="#" class="nav-link"        data-view="playground" id="nav-playground">Playground</a>
+        <a href="#" class="nav-link"        data-view="patterns"   id="nav-patterns">Patterns</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ══ VIEW CONTAINER ══ -->
+  <div id="app"></div>
+
+  <!-- ══ SCRIPTS ══ -->
+  <!-- CodeMirror JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/selection/active-line.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/comment/comment.min.js"></script>
+
+  <!-- Global namespace init -->
+  <script>window.JSHub = {}; window.patterns = [];</script>
+
+  <!-- Views -->
+  <script src="./scripts/router.js"></script>
+  <script src="./scripts/home.js"></script>
+  <script src="./scripts/playground.js"></script>
+  <script src="./scripts/patterns-view.js"></script>
+
+  <!-- Boot -->
+  <script>window.JSHub.router.init();</script>
+
 </body>
-<script src="./scripts/Variables & Scope/01_var-vs-let-vs-const.js"></script>
-<script src="./scripts/script.js"></script>
 </html>
