@@ -190,25 +190,24 @@ console.log(dog.speak());      // "Rex makes a sound."
 // Remember: var is function-scoped.
 // Hoisting happens at the TOP of the NEAREST function — not global top.
 
-function outer() {
-  console.log(innerVar); // undefined (hoisted to top of outer(), not global)
-  
+function functionScopeHoistingDemo() {
+  // console.log(innerVar); // ReferenceError
+  // `innerVar` belongs to inner(), so it is NOT hoisted into this function.
   function inner() {
     var innerVar = "I only belong to inner()";
+    console.log(innerVar);
   }
-  
-  // Wait — innerVar above is actually var inside inner(), not outer()!
-  // Let's redo this correctly:
-  
+  inner();
+
   console.log(localVar); // undefined — hoisted to top of outer()
-  
+
   if (true) {
     var localVar = "I'm var inside if — but hoisted to outer()";
   }
-  
+
   console.log(localVar); // "I'm var inside if — but hoisted to outer()"
 }
-outer();
+functionScopeHoistingDemo();
 
 
 // ══════════════════════════════════════════════════════════════════

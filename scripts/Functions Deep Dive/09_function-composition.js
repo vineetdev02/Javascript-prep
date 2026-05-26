@@ -49,7 +49,7 @@ console.log(formatInput2("  HELLO  ")); // "hello!" (exclaim → lower → trim)
 const processName = pipe(
   s => s.trim(),
   s => s.toLowerCase(),
-  s => s.split(" "),
+  s => s.split(/\s+/),
   parts => parts.map(p => p[0].toUpperCase() + p.slice(1)),
   parts => parts.join(" ")
 );

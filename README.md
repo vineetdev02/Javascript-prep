@@ -66,33 +66,18 @@ Auto-loads all `scripts/patterns/pattern1.js`, `pattern2.js`, … and renders ea
 
 ## Learning Modules (`learning/`)
 
-All course content lives in the `learning/` folder. Two modules so far, more coming.
+All course content lives in the `learning/` folder. JavaScript Phase 1 is now complete: 8 modules, 93 runnable lesson files.
 
 ```
 learning/
-├── 01_variables-and-scope/
-│   ├── 01_var-vs-let-vs-const.js
-│   ├── 02_hoisting.js
-│   ├── 03_temporal-dead-zone.js
-│   ├── 04_block-vs-function-scope.js
-│   ├── 05_global-scope-pollution.js
-│   ├── 06_variable-shadowing.js
-│   ├── 07_lexical-scoping.js
-│   ├── 08_scope-chain.js
-│   └── 09_closures.js
-└── 02_functions-deep-dive/
-    ├── 01_declaration-vs-expression.js
-    ├── 02_arrow-vs-regular-function.js
-    ├── 03_iife-pattern.js
-    ├── 04_higher-order-functions.js
-    ├── 05_pure-functions.js
-    ├── 06_first-class-functions.js
-    ├── 07_currying.js
-    ├── 08_partial-application.js
-    ├── 09_function-composition.js
-    ├── 10_default-parameters.js
-    ├── 11_rest-and-spread.js
-    └── 12_arguments-object.js
+├── 01_variables-and-scope/             # 9 topics
+├── 02_functions-deep-dive/             # 12 topics
+├── 03_this-keyword/                    # 9 topics
+├── 04_asynchronous-javascript/         # 18 topics
+├── 05_prototypes-and-oop/              # 12 topics
+├── 06_closures-and-memory/             # 9 topics
+├── 07_modern-es6-es2024-features/      # 15 topics
+└── 08_error-handling-and-debugging/     # 9 topics
 ```
 
 ### Module 1 — Variables & Scope
@@ -125,6 +110,108 @@ learning/
 | 10 | Default Parameters | ES6 defaults, expressions as defaults, gotchas |
 | 11 | Rest & Spread | `...` in parameters vs arguments |
 | 12 | Arguments Object | Legacy `arguments`, why rest params are better |
+
+### Module 3 — this Keyword
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | this in Global Context | Browser vs Node vs ES module behavior, `globalThis` |
+| 02 | this in Object Method | Object-before-the-dot rule, call site behavior |
+| 03 | this in Arrow Function | Lexical `this`, arrows in callbacks, bad object methods |
+| 04 | this in Class | Constructors, prototype methods, arrow fields, static methods |
+| 05 | call vs apply vs bind | Explicit binding, method borrowing, partial application |
+| 06 | Explicit vs Implicit Binding | Binding rules and priority order |
+| 07 | new Binding | Constructor calls, prototype linkage, `new.target` |
+| 08 | Losing this Context | Detached methods, callbacks, bind/wrapper fixes |
+| 09 | this in Event Listeners | DOM listener behavior, `target` vs `currentTarget` |
+
+### Module 4 — Asynchronous JavaScript
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | Event Loop mechanism | Sync work, microtasks, macrotasks, execution order |
+| 02 | Call Stack | LIFO execution, stack unwinding, recursion limits |
+| 03 | Web APIs / Node APIs | Host APIs vs ECMAScript core |
+| 04 | Callback Queue (macro) | Timers, I/O, UI events as macrotasks |
+| 05 | Microtask Queue | Promise/queueMicrotask priority |
+| 06 | Promise internals | States, settlement, async handlers |
+| 07 | Promise chaining | Return values, thrown errors, chain flow |
+| 08 | Promise.all | Parallel work, input order, fail-fast behavior |
+| 09 | Promise.allSettled | Partial success handling |
+| 10 | Promise.race | First settled promise |
+| 11 | Promise.any | First fulfilled promise, `AggregateError` |
+| 12 | async/await syntax | Async function promises, readable flow |
+| 13 | Error handling in async | Rejections, `catch`, `try/await/catch` |
+| 14 | try/catch/finally | Cleanup and return-value traps |
+| 15 | Callback hell | Nested callbacks and refactoring |
+| 16 | Debounce | Wait until calls stop |
+| 17 | Throttle | Limit call frequency |
+| 18 | setTimeout vs setInterval | One-shot vs repeated timers |
+
+### Module 5 — Prototypes & OOP
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | Prototype chain | Property lookup and inherited properties |
+| 02 | `__proto__` vs `prototype` | Object prototype vs constructor prototype |
+| 03 | Object.create() | Creating objects with chosen prototypes |
+| 04 | Constructor functions | `new`, shared prototype methods |
+| 05 | ES6 Classes | Class syntax over prototype behavior |
+| 06 | Class inheritance | `extends`, inherited methods |
+| 07 | super keyword | Parent constructors and methods |
+| 08 | Static methods & properties | Class-level behavior |
+| 09 | Private fields (#) | Real private state |
+| 10 | Mixin pattern | Composing reusable behavior |
+| 11 | Polymorphism | Shared interfaces across object types |
+| 12 | Encapsulation | Protecting state through APIs |
+
+### Module 6 — Closures & Memory
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | Closure definition | Function plus retained lexical scope |
+| 02 | Practical closure examples | Factories, config, callbacks |
+| 03 | Module pattern via closures | Private state with IIFEs |
+| 04 | Memory leaks via closures | Retained references and cleanup |
+| 05 | Garbage collection | Reachability and release patterns |
+| 06 | WeakMap / WeakSet | Weak object metadata |
+| 07 | WeakRef | Non-owning references |
+| 08 | FinalizationRegistry | Cleanup after collection |
+| 09 | Memoization implementation | Closure-backed caches |
+
+### Module 7 — Modern ES6–ES2024 Features
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | Destructuring | Array/object extraction, defaults, rest |
+| 02 | Template literals | Interpolation, multiline strings |
+| 03 | Symbol type | Unique keys, hidden-ish metadata |
+| 04 | Map vs Object | Dynamic key-value collections |
+| 05 | Set vs Array | Uniqueness and membership |
+| 06 | Generators & iterators | Lazy sequences and `yield` |
+| 07 | Proxy & Reflect | Operation interception |
+| 08 | Optional chaining (`?.`) | Safe nested access |
+| 09 | Nullish coalescing (`??`) | Defaults only for null/undefined |
+| 10 | Logical assignment | `||=`, `&&=`, `??=` behavior |
+| 11 | Array methods | `.at()`, `.findLast()` |
+| 12 | Object.entries / fromEntries | Object transformation pipelines |
+| 13 | structuredClone() | Deep cloning structured data |
+| 14 | top-level await | ES module async loading |
+| 15 | Import assertions | Import metadata and JSON modules |
+
+### Module 8 — Error Handling & Debugging
+
+| # | Topic | Key Concepts |
+|---|-------|--------------|
+| 01 | Error types | `TypeError`, `ReferenceError`, meaning from names |
+| 02 | Custom Error classes | Domain errors with metadata |
+| 03 | try/catch scope | Block scope and catch parameters |
+| 04 | Unhandled promise rejection | Escaped async failures |
+| 05 | window.onerror | Browser global error capture |
+| 06 | console methods | `table`, `time`, `warn`, `trace`, more |
+| 07 | Breakpoints in DevTools | Stepping, scope, call stack |
+| 08 | Performance profiling | Measuring hot paths |
+| 09 | Memory snapshot | Retained objects and leak hunting |
 
 ### How to study a file
 
@@ -191,7 +278,13 @@ JavaScript/
 │       └── pattern2.js, ...          # Your patterns (add more here)
 ├── learning/
 │   ├── 01_variables-and-scope/       # Module 1 — 9 deep-dive files
-│   └── 02_functions-deep-dive/       # Module 2 — 12 deep-dive files
+│   ├── 02_functions-deep-dive/       # Module 2 — 12 deep-dive files
+│   ├── 03_this-keyword/              # Module 3 — 9 deep-dive files
+│   ├── 04_asynchronous-javascript/   # Module 4 — 18 deep-dive files
+│   ├── 05_prototypes-and-oop/        # Module 5 — 12 deep-dive files
+│   ├── 06_closures-and-memory/       # Module 6 — 9 deep-dive files
+│   ├── 07_modern-es6-es2024-features/# Module 7 — 15 deep-dive files
+│   └── 08_error-handling-and-debugging/# Module 8 — 9 deep-dive files
 └── docs/
     └── screenshots/                  # App screenshots for this README
 ```
@@ -205,6 +298,12 @@ The learning files can also be run directly in Node:
 ```bash
 node "learning/01_variables-and-scope/01_var-vs-let-vs-const.js"
 node "learning/02_functions-deep-dive/07_currying.js"
+node "learning/03_this-keyword/05_call-vs-apply-vs-bind.js"
+node "learning/04_asynchronous-javascript/01_event-loop-mechanism.js"
+node "learning/05_prototypes-and-oop/01_prototype-chain.js"
+node "learning/06_closures-and-memory/09_memoization-implementation.js"
+node "learning/07_modern-es6-es2024-features/13_structuredclone.js"
+node "learning/08_error-handling-and-debugging/02_custom-error-classes.js"
 ```
 
 ---

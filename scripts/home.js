@@ -63,6 +63,12 @@ window.JSHub.home = {
         <div class="banner-track">
           <span>🚀 Variables &amp; Scope</span>
           <span>⚡ Functions Deep Dive</span>
+          <span>🧭 this Keyword</span>
+          <span>⏱ Async &amp; Event Loop</span>
+          <span>🏗 Prototypes &amp; OOP</span>
+          <span>🧠 Closures &amp; Memory</span>
+          <span>✨ Modern ES6–ES2024</span>
+          <span>🛠 Error Handling</span>
           <span>🔷 Patterns Gallery</span>
           <span>🎯 Closures</span>
           <span>🔥 Currying</span>
@@ -73,6 +79,12 @@ window.JSHub.home = {
           <span>🌐 Scope Chain</span>
           <span>🚀 Variables &amp; Scope</span>
           <span>⚡ Functions Deep Dive</span>
+          <span>🧭 this Keyword</span>
+          <span>⏱ Async &amp; Event Loop</span>
+          <span>🏗 Prototypes &amp; OOP</span>
+          <span>🧠 Closures &amp; Memory</span>
+          <span>✨ Modern ES6–ES2024</span>
+          <span>🛠 Error Handling</span>
           <span>🔷 Patterns Gallery</span>
           <span>🎯 Closures</span>
           <span>🔥 Currying</span>
@@ -141,6 +153,103 @@ window.JSHub.home = {
             <div class="feature-count">12 Topics · 12 Deep-Dive Files</div>
           </div>
 
+          <div class="feature-card feature-card--cyan">
+            <span class="feature-icon">🧭</span>
+            <h3 class="feature-title">this Keyword</h3>
+            <p class="feature-desc">
+              Global, object, arrow, class, call/apply/bind, explicit vs implicit binding,
+              new binding, lost context, and event listener behavior.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Global</span>
+              <span class="topic-chip">Arrow</span>
+              <span class="topic-chip">Classes</span>
+              <span class="topic-chip">Bind</span>
+              <span class="topic-chip">Events</span>
+            </div>
+            <div class="feature-count">9 Topics · 9 Deep-Dive Files</div>
+          </div>
+
+          <div class="feature-card feature-card--amber">
+            <span class="feature-icon">⏱</span>
+            <h3 class="feature-title">Async &amp; Event Loop</h3>
+            <p class="feature-desc">
+              Event loop, call stack, queues, promises, async/await, error handling,
+              callback hell, debounce, throttle, and timer behavior.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Promises</span>
+              <span class="topic-chip">Microtasks</span>
+              <span class="topic-chip">async/await</span>
+              <span class="topic-chip">Debounce</span>
+            </div>
+            <div class="feature-count">18 Topics · 18 Deep-Dive Files</div>
+          </div>
+
+          <div class="feature-card feature-card--purple">
+            <span class="feature-icon">🏗</span>
+            <h3 class="feature-title">Prototypes &amp; OOP</h3>
+            <p class="feature-desc">
+              Prototype chain, constructors, Object.create, classes, inheritance,
+              super, static members, private fields, mixins, and encapsulation.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Prototype</span>
+              <span class="topic-chip">Classes</span>
+              <span class="topic-chip">super</span>
+              <span class="topic-chip">Private #</span>
+            </div>
+            <div class="feature-count">12 Topics · 12 Deep-Dive Files</div>
+          </div>
+
+          <div class="feature-card feature-card--cyan">
+            <span class="feature-icon">🧠</span>
+            <h3 class="feature-title">Closures &amp; Memory</h3>
+            <p class="feature-desc">
+              Closure mastery, module patterns, memory leaks, garbage collection,
+              WeakMap, WeakSet, WeakRef, FinalizationRegistry, and memoization.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Closures</span>
+              <span class="topic-chip">GC</span>
+              <span class="topic-chip">WeakMap</span>
+              <span class="topic-chip">Memoize</span>
+            </div>
+            <div class="feature-count">9 Topics · 9 Deep-Dive Files</div>
+          </div>
+
+          <div class="feature-card feature-card--amber">
+            <span class="feature-icon">✨</span>
+            <h3 class="feature-title">Modern ES6–ES2024</h3>
+            <p class="feature-desc">
+              Destructuring, Symbols, Map/Set, generators, Proxy/Reflect,
+              optional chaining, nullish coalescing, structuredClone, and imports.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Map</span>
+              <span class="topic-chip">Proxy</span>
+              <span class="topic-chip">?.</span>
+              <span class="topic-chip">Clone</span>
+            </div>
+            <div class="feature-count">15 Topics · 15 Deep-Dive Files</div>
+          </div>
+
+          <div class="feature-card feature-card--purple">
+            <span class="feature-icon">🛠</span>
+            <h3 class="feature-title">Error Handling &amp; Debugging</h3>
+            <p class="feature-desc">
+              Error types, custom errors, try/catch scope, unhandled rejections,
+              global handlers, console tools, breakpoints, profiling, and memory snapshots.
+            </p>
+            <div class="feature-topics">
+              <span class="topic-chip">Errors</span>
+              <span class="topic-chip">try/catch</span>
+              <span class="topic-chip">DevTools</span>
+              <span class="topic-chip">Profiling</span>
+            </div>
+            <div class="feature-count">9 Topics · 9 Deep-Dive Files</div>
+          </div>
+
           <div class="feature-card feature-card--amber">
             <span class="feature-icon">🔷</span>
             <h3 class="feature-title">Patterns Gallery</h3>
@@ -201,8 +310,8 @@ window.JSHub.home = {
   },
 
   startCounters() {
-    this.animateCounter('stat-topics',     21,  1400);
-    this.animateCounter('stat-modules',     2,   800);
+    this.animateCounter('stat-topics',     93,  1400);
+    this.animateCounter('stat-modules',     8,   800);
     this.animateCounter('stat-playground',  1,   600);
   },
 
