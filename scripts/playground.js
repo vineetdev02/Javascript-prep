@@ -15,6 +15,12 @@ window.JSHub.playground = {
   _IDB_NAME:       'jshub-fsa',
   _IDB_STORE:      'handles',
   _IDB_KEY:        'patterns-dir',
+  _origConsole:    null,   // saved real console methods
+  _runId:          0,      // increments per Run; stale async ignored
+  _logCounter:     0,      // output line numbering
+  _counters:       {},     // console.count state
+  _timers:         {},     // console.time state
+  _groupDepth:     0,      // console.group nesting
 
   snippets: {
     'Hello World': `// 👋 Hello World
@@ -112,7 +118,8 @@ console.log("After TDZ:", notYet); // ✅`,
 
   // ═══════════════════════════════════════════════════════════
   render() {
-    this._cm          = null;
+    this._restoreConsole();
+    this._cm            = null;
     this._activePattern = null;
     this._dropdownOpen  = false;
     const app = document.getElementById('app');
@@ -800,6 +807,186 @@ console.log("After TDZ:", notYet); // ✅`,
   },
 
   // ═══════════════════════════════════════════════════════════
+  // CONSOLE INTERCEPTION HELPERS — real-time capture (sync+async)
+  // ═══════════════════════════════════════════════════════════
+
+  _fmtValue(v) {
+    if (v === null)      return 'null';
+    if (v === undefined) return 'undefined';
+    if (typeof v === 'object') {
+      try { return JSON.stringify(v, null, 2); } catch { return String(v); }
+    }
+    return String(v);
+  },
+
+  /** Append one line to the output panel in real-time */
+  _appendOutputLine(type, text, isHTML) {
+    const ob = document.getElementById('output-body');
+    if (!ob) return;
+    const ph = ob.querySelector('.output-line--empty, .output-welcome');
+    if (ph) ph.remove();
+
+    this._logCounter++;
+    const el = document.createElement('div');
+    el.className = `output-line output-line--${type}`;
+    const pad = this._groupDepth > 0
+      ? ` style="padding-left:${this._groupDepth * 16 + 8}px"`
+      : '';
+
+    if (isHTML) {
+      el.innerHTML = `<span class="output-index">${this._logCounter}</span>`
+        + `<div class="output-text"${pad}>${text}</div>`;
+    } else {
+      el.innerHTML = `<span class="output-index">${this._logCounter}</span>`
+        + `<pre class="output-text"${pad}>${this._esc(text)}</pre>`;
+    }
+    ob.appendChild(el);
+    ob.scrollTop = ob.scrollHeight;
+  },
+
+  /** Build an HTML table for console.table() */
+  _buildTable(data) {
+    if (data == null || typeof data !== 'object') return this._esc(this._fmtValue(data));
+    const isArr = Array.isArray(data);
+    const entries = isArr ? data.map((v, i) => [i, v]) : Object.entries(data);
+    if (entries.length === 0) return '<em>(empty)</em>';
+
+    const subKeys = new Set();
+    entries.forEach(([, v]) => {
+      if (v && typeof v === 'object') Object.keys(v).forEach(k => subKeys.add(k));
+    });
+
+    const cols = [...subKeys];
+    let h = '<table class="console-table"><thead><tr>';
+    h += `<th>${isArr ? '(index)' : '(key)'}</th>`;
+    if (cols.length) cols.forEach(c => { h += `<th>${this._esc(c)}</th>`; });
+    else h += '<th>Value</th>';
+    h += '</tr></thead><tbody>';
+
+    entries.forEach(([k, v]) => {
+      h += '<tr><td>' + this._esc(String(k)) + '</td>';
+      if (cols.length) {
+        cols.forEach(c => {
+          const cv = (v && typeof v === 'object') ? v[c] : undefined;
+          h += '<td>' + this._esc(this._fmtValue(cv)) + '</td>';
+        });
+      } else {
+        h += '<td>' + this._esc(this._fmtValue(v)) + '</td>';
+      }
+      h += '</tr>';
+    });
+    h += '</tbody></table>';
+    return h;
+  },
+
+  /** Save original console methods (idempotent) */
+  _saveOrigConsole() {
+    if (this._origConsole) return;
+    const c = console;
+    this._origConsole = {};
+    ['log','error','warn','info','debug','table','dir','dirxml','clear',
+     'assert','count','countReset','time','timeEnd','timeLog',
+     'group','groupCollapsed','groupEnd','trace'].forEach(m => {
+      if (typeof c[m] === 'function') this._origConsole[m] = c[m].bind(c);
+    });
+  },
+
+  /** Restore original console methods */
+  _restoreConsole() {
+    if (!this._origConsole) return;
+    Object.keys(this._origConsole).forEach(m => { console[m] = this._origConsole[m]; });
+    this._origConsole = null;
+  },
+
+  /** Override every console method for current _runId */
+  _interceptConsole() {
+    this._saveOrigConsole();
+    const self = this;
+    const rid  = this._runId;
+    const stale = () => self._runId !== rid;
+    const orig  = self._origConsole;
+    const fmt   = (v) => self._fmtValue(v);
+
+    // ── core loggers ──
+    ['log','info','warn','error','debug'].forEach(m => {
+      const type = m === 'debug' ? 'log' : m;
+      console[m] = (...a) => { orig[m](...a); if (!stale()) self._appendOutputLine(type, a.map(fmt).join(' ')); };
+    });
+
+    // ── console.table ──
+    console.table = (d, cols) => { orig.table(d, cols); if (!stale()) self._appendOutputLine('log', self._buildTable(d), true); };
+
+    // ── console.dir / dirxml ──
+    console.dir    = (o) => { orig.dir(o);    if (!stale()) self._appendOutputLine('log', fmt(o)); };
+    console.dirxml = console.dir;
+
+    // ── console.clear ──
+    console.clear = () => {
+      orig.clear();
+      if (stale()) return;
+      const ob = document.getElementById('output-body');
+      if (ob) ob.innerHTML = '';
+      self._logCounter = 0;
+      self._appendOutputLine('log', '🗑 Console was cleared');
+    };
+
+    // ── console.assert ──
+    console.assert = (cond, ...a) => {
+      orig.assert(cond, ...a);
+      if (!cond && !stale()) {
+        self._appendOutputLine('error',
+          a.length ? 'Assertion failed: ' + a.map(fmt).join(' ') : 'Assertion failed');
+      }
+    };
+
+    // ── console.count / countReset ──
+    console.count = (l = 'default') => {
+      orig.count(l); if (stale()) return;
+      self._counters[l] = (self._counters[l] || 0) + 1;
+      self._appendOutputLine('log', `${l}: ${self._counters[l]}`);
+    };
+    console.countReset = (l = 'default') => { orig.countReset(l); self._counters[l] = 0; };
+
+    // ── console.time / timeEnd / timeLog ──
+    console.time = (l = 'default') => { orig.time(l); self._timers[l] = performance.now(); };
+    console.timeEnd = (l = 'default') => {
+      orig.timeEnd(l); if (stale()) return;
+      if (self._timers[l] !== undefined) {
+        self._appendOutputLine('log', `${l}: ${(performance.now() - self._timers[l]).toFixed(3)}ms`);
+        delete self._timers[l];
+      } else { self._appendOutputLine('warn', `Timer '${l}' does not exist`); }
+    };
+    console.timeLog = (l = 'default', ...a) => {
+      orig.timeLog(l, ...a); if (stale()) return;
+      if (self._timers[l] !== undefined) {
+        const extra = a.length ? ' ' + a.map(fmt).join(' ') : '';
+        self._appendOutputLine('log', `${l}: ${(performance.now() - self._timers[l]).toFixed(3)}ms${extra}`);
+      } else { self._appendOutputLine('warn', `Timer '${l}' does not exist`); }
+    };
+
+    // ── console.group / groupCollapsed / groupEnd ──
+    console.group = (...a) => {
+      orig.group(...a); if (stale()) return;
+      if (a.length) self._appendOutputLine('log', '▸ ' + a.map(fmt).join(' '));
+      self._groupDepth++;
+    };
+    console.groupCollapsed = console.group;
+    console.groupEnd = () => { orig.groupEnd(); if (self._groupDepth > 0) self._groupDepth--; };
+
+    // ── console.trace ──
+    console.trace = (...a) => {
+      orig.trace(...a); if (stale()) return;
+      const msg = a.length ? a.map(fmt).join(' ') : 'console.trace';
+      let stack = '';
+      try { throw new Error(); } catch (e) {
+        stack = (e.stack || '').split('\n').slice(2, 6)
+          .map(l => l.trim()).filter(Boolean).join('\n');
+      }
+      self._appendOutputLine('log', msg + (stack ? '\n' + stack : ''));
+    };
+  },
+
+  // ═══════════════════════════════════════════════════════════
   runCode() {
     const code       = this._getCode().trim();
     const outputBody = document.getElementById('output-body');
@@ -811,29 +998,15 @@ console.log("After TDZ:", notYet); // ✅`,
       return;
     }
 
-    const logs = [];
-    const orig = {
-      log:   console.log,
-      error: console.error,
-      warn:  console.warn,
-      info:  console.info,
-    };
+    // Fresh run — reset state
+    this._runId++;
+    this._logCounter  = 0;
+    this._counters    = {};
+    this._timers      = {};
+    this._groupDepth  = 0;
 
-    const fmt = (v) => {
-      if (v === null)      return 'null';
-      if (v === undefined) return 'undefined';
-      if (typeof v === 'object') {
-        try { return JSON.stringify(v, null, 2); } catch { return String(v); }
-      }
-      return String(v);
-    };
-
-    const capture = (type) => (...args) => logs.push({ type, text: args.map(fmt).join(' ') });
-
-    console.log   = capture('log');
-    console.error = capture('error');
-    console.warn  = capture('warn');
-    console.info  = capture('info');
+    // Set up real-time console interception (persists for async)
+    this._interceptConsole();
 
     let execErr = null;
     try {
@@ -843,29 +1016,15 @@ console.log("After TDZ:", notYet); // ✅`,
       execErr = e;
     }
 
-    console.log   = orig.log;
-    console.error = orig.error;
-    console.warn  = orig.warn;
-    console.info  = orig.info;
+    // NOTE: console methods stay intercepted so async output is captured too
 
     if (execErr) {
-      logs.push({ type: 'error', text: `❌ ${execErr.name}: ${execErr.message}` });
+      this._appendOutputLine('error', `❌ ${execErr.name}: ${execErr.message}`);
     }
 
-    if (logs.length === 0) {
+    if (this._logCounter === 0 && !execErr) {
       outputBody.innerHTML = `<div class="output-line output-line--empty">// Code ran with no console output</div>`;
-    } else {
-      logs.forEach((log, i) => {
-        const line = document.createElement('div');
-        line.className = `output-line output-line--${log.type}`;
-        line.innerHTML = `
-          <span class="output-index">${i + 1}</span>
-          <pre class="output-text">${this._esc(log.text)}</pre>`;
-        outputBody.appendChild(line);
-      });
     }
-
-    outputBody.scrollTop = outputBody.scrollHeight;
   },
 
   // ═══════════════════════════════════════════════════════════

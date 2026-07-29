@@ -883,6 +883,34 @@ body {
 .output-line--info  .output-text { color: #60a5fa; }
 .output-line--empty              { color: var(--text-muted); font-style: italic; padding: 16px 0; }
 
+/* ── console.table() ── */
+.console-table {
+  border-collapse: collapse;
+  font-family:     var(--font-mono);
+  font-size:       12px;
+  margin:          4px 0;
+  width:           100%;
+  max-width:       600px;
+}
+.console-table th,
+.console-table td {
+  padding:    4px 12px;
+  border:     1px solid rgba(255,255,255,0.08);
+  text-align: left;
+  color:      var(--text-2);
+}
+.console-table th {
+  background:     rgba(0,255,204,0.06);
+  color:          var(--cyan);
+  font-weight:    700;
+  font-size:      11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.console-table tr:hover td {
+  background: rgba(255,255,255,0.03);
+}
+
 /* ============================================================
    PATTERNS VIEW
    ============================================================ */
