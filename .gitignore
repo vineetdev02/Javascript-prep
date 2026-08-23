@@ -27,3 +27,10 @@ npm-debug.log*
 # Environment
 .env
 .env.*
+
+# Personal / local-only — never push (public repo)
+CLAUDE.md
+.claude/
+.antigravitycli/
+.~lock.*#
+*.tmp

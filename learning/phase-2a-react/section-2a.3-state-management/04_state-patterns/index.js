@@ -181,5 +181,5 @@ console.log(topics.join(" | "));
 // Still ahead in the docx, if you continue:
 //   2A.4 Performance — React.memo, code splitting, virtualization, Web Vitals
 //   2A.5 Patterns & Architecture — compound components, render props, HOCs,
-//        portals, error boundaries, React Router v6
+//        portals, error boundaries, forwarding refs, slots, headless components
 // ─────────────────────────────────────────────────────────────────
